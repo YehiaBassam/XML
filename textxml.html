@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>XML GET JQuery</title>
+</head>
+<body>
+    
+    <input id="myInput" type="text" placeholder="Search..">
+    <input type="button" id="b1" value="request from XML"/> 
+    <select id="myselector">
+        <option value="all" selected>All</option>
+        <option value="12">> 10</option>
+        <option value="10">< 10</option>      
+    </select>
+
+    <table id="t1" style="padding: 20px;">
+    </table>
+
+    <script src="jquery-3.4.1.js"></script>
+
+
+    <script>
+       
+    //=== through ajax =====
+     $("#b1").on("click",function(){ 
+         
+         $.ajax({
+              url:"cdcatalog.xml", 
+              success:function(data){ 
+                
+                  //alert("sucess") 
+                //   console.log(data); 
+                  var cds=$(data).find("CD");
+                   //console.log(cds); 
+                   $("#t1").append("<tr><th>TITLE</th><th>ARTIST</th><th>PRICE</th></tr>");
+
+                   
+                   cds.each(function(){
+                        //  console.log($(this).children());
+                           var t=$(this).children("TITLE").text(); //    this=>cds
+                           var a=$(this).children("ARTIST").text(); 
+                           var p=$(this).children("PRICE").text();
+                          // var mynum = parseFloat(p);  
+                        //    console.log(typeof(mynum)) 
+                        //    console.log(mynum)   
+
+                        $("#t1").append("<tr><td>"+t+"</td><td>"+a+"</td><td>"+p+"</td></tr>"); 
+
+                        
+
+                          $("table tr td:nth-child(3)").filter(function(){
+                             return(this.innerText > 10)
+                         }).parent().css('background-color','orangered').addClass("aboveten")
+
+
+                        
+                         $("table tr td:nth-child(3)").filter(function(){
+                             return(this.innerText < 10)
+                         }).parent().css('background-color','lightseagreen').addClass("underten") 
+                        
+
+                        
+                         
+
+                         $("#myInput").on("keyup", function() {
+                         var value = $(this).val().toLowerCase();
+                         $("#t1 tr").filter(function() {
+                         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                         });
+                            });
+                                               
+                            })
+                             },
+                              error:function(){
+                                  alert("error")}
+                              })
+                              });
+
+                              $("#myselector").change(function(){
+
+                            //    if($('#myselector option:selected').val() == 10)
+                            //    {
+                            //     $("[class=aboveten]").css("display","none")
+                            //     $("[class=underten]").show()
+                            //    }
+
+                            //    else if($('#myselector option:selected').val() == 12)
+                            //    {
+                            //     $("[class=underten]").css("display","none")
+                            //     $("[class=aboveten]").show()
+                            //    }
+
+                            // else
+                            //    {
+                            //     $("[class=underten]").show()
+                            //     $("[class=aboveten]").show()
+                            //    }
+
+                                if(this.value == 10 )
+                                {
+                                $("[class=aboveten]").css("display","none")
+                                $("[class=underten]").show()
+                               }
+
+                                                  
+                               else if(this.value == 12 )
+                               {
+                                $("[class=underten]").hide()
+                                $("[class=aboveten]").show()
+                               }
+                               else
+                               {
+                                $("[class=underten]").show()
+                                $("[class=aboveten]").show()
+                               }
+                         })
+    </script>
+</body>
+</html>
